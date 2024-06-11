@@ -4,9 +4,16 @@ This project is a simple CRUD app for managing a sports trading card collection.
 
 ## Screenshots
 
+#### Search your card collection with one or more parameters
+
 ![Search with Trading Card Manager](pictures/searchTradingCardManager.png)
 
+#### View your entire card collection
+
 ![View all cards with Trading Card Manager](pictures/viewAllCardsTradingCardManager.png)
+
+#### Add cards to your collection with the form or CSV upload
+
 ![Add cards to Trading Card Manager](pictures/addCardsTradingCardManager.png)
 
 ## Getting Started with Create React App

@@ -1,4 +1,10 @@
-# Getting Started with Create React App
+# Trading Card Manager
+
+This project is a simple CRUD app for managing a sports trading card collection. It has the ability to add, edit, and delete cards from your collection. This app uses a React front end, Express.JS backend, and PostgreSQL for the database.
+
+## Screenshots
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

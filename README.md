@@ -4,6 +4,8 @@ This project is a simple CRUD app for managing a sports trading card collection.
 
 ## Screenshots
 
+![Search with Trading Card Manager](pictures/searchTradingCardManager.png)
+
 ## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

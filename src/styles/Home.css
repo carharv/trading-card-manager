@@ -1,0 +1,135 @@
+/* styles.css */
+
+/* General styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  padding: 20px;
+  max-width: 95%;
+  margin: auto;
+}
+
+@media (max-width: 1200px) {
+  .container {
+    padding: 15px;
+    max-width: 1100px;
+  }
+}
+
+@media (max-width: 992px) {
+  .container {
+    padding: 10px;
+    max-width: 900px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 5px;
+    max-width: 700px;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 2px;
+    max-width: 500px;
+  }
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+.table-container {
+  overflow-x: auto;
+  margin-top: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+thead {
+  background-color: #f4f4f4;
+}
+
+th,
+td {
+  padding: 8px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+button {
+  padding: 10px 15px;
+  margin: 5px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.card-list-container {
+  width: 100%;
+  margin: 0 auto;
+  overflow-x: auto; /* Ensure no horizontal scrolling */
+}
+
+.card-list-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.card-list-container th,
+.card-list-container td {
+  padding: 8px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  th,
+  td {
+    padding: 5px;
+  }
+
+  input {
+    padding: 5px;
+  }
+
+  button {
+    padding: 8px 12px;
+  }
+
+  .card-list-container {
+    width: 100%;
+  }
+}

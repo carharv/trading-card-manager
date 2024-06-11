@@ -1,0 +1,37 @@
+.card-list-container {
+  width: 90%;
+  margin: 0 auto;
+  overflow-x: auto; /* Ensure no horizontal scrolling */
+}
+
+.card-list-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.card-list-container th,
+.card-list-container td {
+  padding: 8px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  th,
+  td {
+    padding: 5px;
+  }
+
+  input {
+    padding: 5px;
+  }
+
+  button {
+    padding: 8px 12px;
+  }
+
+  .card-list-container {
+    width: 100%;
+  }
+}

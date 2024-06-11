@@ -1,0 +1,143 @@
+/* src/pages/AddCard.css */
+
+.add-card-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f7f7f7;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.add-card-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.error {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.submit-button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+}
+
+.submit-button:hover {
+  background-color: #0056b3;
+}
+
+.file-upload {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.file-upload label {
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.file-upload input {
+  margin-bottom: 10px;
+}
+
+.file-upload progress {
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.file-upload button {
+  background-color: #28a745;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.file-upload button:hover {
+  background-color: #218838;
+}
+
+.file-upload .disabled-button {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.import-errors {
+  margin-top: 20px;
+}
+
+.import-errors h3 {
+  color: #e74c3c;
+  margin-bottom: 10px;
+}
+
+.import-errors ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.import-errors li {
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .add-card-container {
+    padding: 10px;
+  }
+
+  .form-group input {
+    padding: 6px;
+  }
+
+  .submit-button,
+  .file-upload button {
+    padding: 8px;
+    font-size: 14px;
+  }
+}

@@ -1,6 +1,8 @@
 .card-list-container {
-  width: 90%;
-  margin: 0 auto;
+  width: calc(
+    100% - 40px
+  ); /* Subtracting 40px from the total width to allow for 20px margins on each side */
+  margin: 0 auto; /* Center the container */
   overflow-x: auto; /* Ensure no horizontal scrolling */
 }
 
@@ -32,6 +34,7 @@
   }
 
   .card-list-container {
-    width: 100%;
+    width: calc(100% - 20px); /* Adjusting width for smaller screens */
+    margin: 0 10px; /* Adding 10px margin on each side */
   }
 }

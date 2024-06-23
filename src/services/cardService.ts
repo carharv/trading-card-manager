@@ -37,9 +37,14 @@ interface SearchTerms {
   marketPrice?: string;
 }
 
-export const getCards = async (page = 1, limit = 10) => {
+export const getCards = async (
+  page = 1,
+  limit = 10,
+  sortField = "id",
+  sortOrder = "ASC"
+) => {
   const response = await axios.get(`${API_URL}/cards`, {
-    params: { page, limit },
+    params: { page, limit, sortField, sortOrder },
   });
   console.log("API Response:", response.data);
   return response.data;
@@ -65,10 +70,12 @@ export const deleteCard = async (id: string) => {
 export const searchCards = async (
   searchTerms: SearchTerms,
   page = 1,
-  limit = 10
+  limit = 10,
+  sortField = "id",
+  sortOrder = "ASC"
 ) => {
   const response = await axios.get(`${API_URL}/search`, {
-    params: { ...searchTerms, page, limit },
+    params: { ...searchTerms, page, limit, sortField, sortOrder },
   });
   console.log("Search Response:", response.data);
   return response.data;

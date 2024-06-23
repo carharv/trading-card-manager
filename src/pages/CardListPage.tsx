@@ -8,13 +8,15 @@ const CardListPage: React.FC = () => {
   const [cards, setCards] = useState<Card[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
-  const [limit] = useState(10);
+  const [limit, setLimit] = useState(50); // Default limit set to 50
+  const [sortField, setSortField] = useState<string>("id");
+  const [sortOrder, setSortOrder] = useState<string>("ASC");
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchCards = async () => {
       try {
-        const response = await getCards(page, limit);
+        const response = await getCards(page, limit, sortField, sortOrder);
         setCards(response.data);
         setTotal(response.total);
       } catch (error) {
@@ -23,11 +25,19 @@ const CardListPage: React.FC = () => {
     };
 
     fetchCards();
-  }, [page, limit]);
+  }, [page, limit, sortField, sortOrder]);
 
-  const handlePageChange = async (newPage: number) => {
+  const handlePageChange = async (
+    newPage: number,
+    newLimit: number = limit,
+    field = sortField,
+    order = sortOrder
+  ) => {
     setPage(newPage);
-    const response = await getCards(newPage, limit);
+    setLimit(newLimit);
+    setSortField(field);
+    setSortOrder(order);
+    const response = await getCards(newPage, newLimit, field, order);
     setCards(response.data);
     setTotal(response.total);
   };
@@ -35,7 +45,7 @@ const CardListPage: React.FC = () => {
   const handleUpdateCard = async (id: number, updatedCard: Partial<Card>) => {
     try {
       await updateCard(id.toString(), updatedCard);
-      const response = await getCards(page, limit);
+      const response = await getCards(page, limit, sortField, sortOrder);
       setCards(response.data);
     } catch (error) {
       console.error("Error updating card:", error);
@@ -45,7 +55,7 @@ const CardListPage: React.FC = () => {
   const handleDeleteCard = async (id: number) => {
     try {
       await deleteCard(id.toString());
-      const response = await getCards(page, limit);
+      const response = await getCards(page, limit, sortField, sortOrder);
       setCards(response.data);
       setTotal(response.total);
     } catch (error) {

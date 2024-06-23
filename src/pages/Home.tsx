@@ -25,16 +25,18 @@ const Home: React.FC = () => {
   const [searchResults, setSearchResults] = useState<Card[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
-  const [limit] = useState(10);
+  const [limit, setLimit] = useState(50); // Default limit set to 50
+  const [sortField, setSortField] = useState<string>("id");
+  const [sortOrder, setSortOrder] = useState<string>("ASC");
   const [error, setError] = useState<string | null>(null);
   const [searched, setSearched] = useState(false);
 
   const handleSearch = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    await searchForCards(1);
+    await searchForCards(1, limit);
   };
 
-  const searchForCards = async (page = 1) => {
+  const searchForCards = async (page = 1, newLimit = limit) => {
     try {
       setError(null);
       const searchTermsWithTagsArray = {
@@ -43,10 +45,17 @@ const Home: React.FC = () => {
           ? searchTerms.tags.split(",").map((tag) => tag.trim())
           : [],
       };
-      const results = await searchCards(searchTermsWithTagsArray, page, limit);
+      const results = await searchCards(
+        searchTermsWithTagsArray,
+        page,
+        newLimit,
+        sortField,
+        sortOrder
+      );
       setSearchResults(results.data);
       setTotal(results.total);
       setPage(page);
+      setLimit(newLimit);
       setSearched(true);
     } catch (error) {
       setError("Error searching cards");
@@ -64,18 +73,27 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     if (searched) {
-      searchForCards(page);
+      searchForCards(page, limit);
     }
-  }, [page]);
+  }, [page, sortField, sortOrder, limit]);
 
-  const handlePageChange = (newPage: number) => {
+  const handlePageChange = (
+    newPage: number,
+    newLimit: number,
+    field = sortField,
+    order = sortOrder
+  ) => {
     setPage(newPage);
+    setLimit(newLimit);
+    setSortField(field);
+    setSortOrder(order);
+    searchForCards(newPage, newLimit);
   };
 
   const handleUpdateCard = async (id: number, updatedCard: Partial<Card>) => {
     try {
       await updateCard(id.toString(), updatedCard);
-      await searchForCards(page);
+      await searchForCards(page, limit);
     } catch (error) {
       console.error("Error updating card:", error);
     }
@@ -84,7 +102,7 @@ const Home: React.FC = () => {
   const handleDeleteCard = async (id: number) => {
     try {
       await deleteCard(id.toString());
-      await searchForCards(page);
+      await searchForCards(page, limit);
     } catch (error) {
       console.error("Error deleting card:", error);
     }

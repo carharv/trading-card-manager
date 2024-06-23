@@ -1,18 +1,69 @@
-/* src/styles/CardList.css */
+/* Style for the container */
+.card-list-container {
+  max-width: 100%; /* Use full width */
+  margin: 0 auto; /* Center the container */
+  padding: 1.25em; /* 20px converted to em */
+}
+
+/* Style for the heading */
+.card-list-container h1 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 1.25em; /* 20px converted to em */
+}
+
+/* Style for the information display */
+.card-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25em; /* 20px converted to em */
+}
+
+.card-info .number-cards-returned {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: bold;
+}
+
+/* Style for the limit input container */
+.limit-input {
+  display: flex;
+  align-items: center;
+}
+
+.limit-input label {
+  margin-right: 0.625em; /* 10px converted to em */
+  font-size: 1.25rem;
+}
+
+.limit-input input {
+  width: 5em; /* 80px converted to em */
+  padding: 0.5em 0.75em; /* 8px 12px converted to em */
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25em; /* 4px converted to em */
+  transition: border-color 0.3s ease;
+}
+
+.limit-input input:focus {
+  border-color: #007bff;
+  outline: none;
+}
 
 /* Style for the table */
 .card-table {
-  width: 100%;
+  width: 100%; /* Ensure table takes full width */
   border-collapse: collapse;
-  margin: 20px 0;
-  font-size: 16px;
+  margin: 1.25em 0; /* 20px converted to em */
+  font-size: 1em; /* 16px converted to em */
   text-align: left;
 }
 
 /* Style for the table headers and cells */
 .card-table th,
 .card-table td {
-  padding: 12px 15px;
+  padding: 0.75em 0.9375em; /* 12px 15px converted to em */
   border: 1px solid #ddd;
 }
 
@@ -33,7 +84,7 @@
 
 /* Style for the pagination controls */
 .pagination {
-  margin: 20px 0;
+  margin: 1.25em 0; /* 20px converted to em */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -41,10 +92,19 @@
 
 /* Style for the pagination buttons */
 .pagination button {
-  margin: 0 5px;
-  padding: 10px 20px;
-  font-size: 16px;
+  margin: 0 0.3125em; /* 5px converted to em */
+  padding: 0.625em 1.25em; /* 10px 20px converted to em */
+  font-size: 1em; /* 16px converted to em */
   cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 0.25em; /* 4px converted to em */
+  transition: background-color 0.3s ease;
+}
+
+.pagination button:hover {
+  background-color: #0056b3;
 }
 
 /* Disabled state for pagination buttons */
@@ -55,19 +115,29 @@
 
 /* Style for the pagination text */
 .pagination span {
-  margin: 0 10px;
-  font-size: 16px;
+  margin: 0 0.625em; /* 10px converted to em */
+  font-size: 1em; /* 16px converted to em */
 }
 
 /* Style for the bulk actions button */
 .bulk-actions button {
-  margin: 10px 0;
-  padding: 10px 20px;
-  font-size: 16px;
+  margin: 0.625em 0; /* 10px converted to em */
+  padding: 0.625em 1.25em; /* 10px 20px converted to em */
+  font-size: 1em; /* 16px converted to em */
   cursor: pointer;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 0.25em; /* 4px converted to em */
+  transition: background-color 0.3s ease;
+}
+
+.bulk-actions button:hover {
+  background-color: #c82333;
 }
 
 /* Disabled state for bulk actions button */
+/* DO NOT CHANGE THE OPACITY FROM 0*/
 .bulk-actions button:disabled {
   cursor: not-allowed;
   opacity: 0;
@@ -78,6 +148,10 @@
   cursor: pointer;
   color: blue;
   text-decoration: underline;
+}
+
+#cardsPerPage {
+  margin-left: 0.5em;
 }
 
 /* Overlay styles */
@@ -95,16 +169,83 @@
 
 .overlay-content {
   background: white;
-  padding: 20px;
-  border-radius: 5px;
-  max-width: 600px;
+  padding: 1.25em; /* 20px converted to em */
+  border-radius: 0.3125em; /* 5px converted to em */
+  max-width: 37.5em; /* 600px converted to em */
   width: 90%;
 }
 
 .close-overlay {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 0.625em; /* 10px converted to em */
+  right: 0.625em; /* 10px converted to em */
   cursor: pointer;
-  font-size: 24px;
+  font-size: 1.5em; /* 24px converted to em */
+}
+
+/* Style for sortable table headers */
+.card-table th {
+  cursor: pointer;
+}
+
+.card-table th:hover {
+  text-decoration: underline;
+}
+
+/* Style for the sorting arrows */
+.card-table th.sort-asc::after {
+  content: " ↑";
+}
+
+.card-table th.sort-desc::after {
+  content: " ↓";
+}
+
+/* Additional styles for enhanced pagination controls */
+.pagination .underline {
+  text-decoration: underline;
+}
+
+.pagination .active {
+  font-weight: bold;
+}
+
+.pagination .page-info {
+  margin: 0 1.25em; /* 20px converted to em */
+  font-size: 1em; /* 16px converted to em */
+}
+
+.pagination .page-jump {
+  display: flex;
+  align-items: center;
+}
+
+.pagination .page-jump input {
+  width: 3.125em; /* 50px converted to em */
+  margin-right: 0.3125em; /* 5px converted to em */
+  padding: 0.5em;
+  font-size: 1em; /* 16px converted to em */
+  border: 1px solid #ccc;
+  border-radius: 0.25em; /* 4px converted to em */
+  transition: border-color 0.3s ease;
+}
+
+.pagination .page-jump input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.pagination .page-jump button {
+  padding: 0.625em 1.25em; /* 10px 20px converted to em */
+  font-size: 1em; /* 16px converted to em */
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 0.25em; /* 4px converted to em */
+  transition: background-color 0.3s ease;
+}
+
+.pagination .page-jump button:hover {
+  background-color: #0056b3;
 }

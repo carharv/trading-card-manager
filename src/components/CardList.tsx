@@ -25,7 +25,12 @@ interface CardListProps {
   total: number;
   page: number;
   limit: number;
-  onPageChange: (page: number) => void;
+  onPageChange: (
+    page: number,
+    limit: number,
+    sortField?: string,
+    sortOrder?: string
+  ) => void;
   onUpdateCard: (id: number, updatedCard: Partial<Card>) => void;
   onDeleteCard: (id: number) => void;
 }
@@ -58,20 +63,19 @@ const CardList: React.FC<CardListProps> = ({
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [selectedCards, setSelectedCards] = useState<Set<number>>(new Set());
   const [expandedNote, setExpandedNote] = useState<string | null>(null);
+  const [sortField, setSortField] = useState<string>("id");
+  const [sortOrder, setSortOrder] = useState<string | undefined>("ASC");
+  const [limitInput, setLimitInput] = useState<number>(limit); // Default limit
+  const [pageInput, setPageInput] = useState<number>(page); // Page input for jumping to any page
 
   useEffect(() => {
-    if (editingCard) {
-      setForm({
-        ...editingCard,
-        pricePaid:
-          editingCard.pricePaid !== undefined ? editingCard.pricePaid : null,
-        marketPrice:
-          editingCard.marketPrice !== undefined
-            ? editingCard.marketPrice
-            : null,
-      });
-    }
-  }, [editingCard]);
+    onPageChange(
+      1,
+      Math.max(limitInput, 10),
+      sortField,
+      sortOrder || undefined
+    ); // Reset to first page when limit changes
+  }, [limitInput]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -79,6 +83,27 @@ const CardList: React.FC<CardListProps> = ({
       ...prevForm,
       [name]: value !== "" ? value : null,
     }));
+  };
+
+  const handleLimitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newLimit = parseInt(e.target.value, 10);
+    setLimitInput(isNaN(newLimit) ? 10 : newLimit);
+  };
+
+  const handlePageInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newPage = parseInt(e.target.value, 10);
+    setPageInput(isNaN(newPage) ? 1 : newPage);
+  };
+
+  const handlePageJump = () => {
+    if (pageInput >= 1 && pageInput <= totalPages) {
+      onPageChange(
+        pageInput,
+        Math.max(limitInput, 10),
+        sortField,
+        sortOrder || undefined
+      );
+    }
   };
 
   const validateForm = () => {
@@ -219,30 +244,113 @@ const CardList: React.FC<CardListProps> = ({
     setExpandedNote(null);
   };
 
+  const handleSort = (field: string) => {
+    let order: string | null;
+    if (sortField === field) {
+      if (sortOrder === "ASC") {
+        order = "DESC";
+      } else if (sortOrder === "DESC") {
+        order = null;
+      } else {
+        order = "ASC";
+      }
+    } else {
+      order = "ASC";
+    }
+    setSortField(order ? field : "");
+    setSortOrder(order || undefined);
+    onPageChange(page, limitInput, order ? field : "", order || undefined);
+  };
+
+  const renderSortArrow = (field: string) => {
+    if (sortField === field) {
+      if (sortOrder === "ASC") {
+        return " ↑";
+      } else if (sortOrder === "DESC") {
+        return " ↓";
+      }
+    }
+    return "";
+  };
+
   const totalPages = Math.ceil(total / limit);
 
+  const getPageNumbers = () => {
+    const startPage = Math.max(page - 2, 1);
+    const endPage = Math.min(startPage + 4, totalPages);
+
+    const pageNumbers = [];
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(i);
+    }
+    return pageNumbers;
+  };
+
   return (
-    <div>
+    <div className="card-list-container">
       <h1>Card List</h1>
-      <p>Number of Cards Returned: {total}</p>
+      <div className="card-info">
+        <p className="number-cards-returned">
+          Number of Cards Returned: {total}
+        </p>
+        <div className="limit-input">
+          <label htmlFor="limit">Show</label>
+          <input
+            type="number"
+            id="limit"
+            value={limitInput}
+            onChange={handleLimitChange}
+            min="10"
+          />
+          <label htmlFor="limit" id="cardsPerPage">
+            cards per page
+          </label>
+        </div>
+      </div>
       <table className="card-table">
         <thead>
           <tr>
             <th>Select</th>
-            <th>Year</th>
-            <th>Player</th>
-            <th>Added Date</th>
-            <th>Manufacturer</th>
-            <th>Set</th>
-            <th>Subset</th>
-            <th>Type</th>
-            <th>On Card Code</th>
-            <th>Sport</th>
-            <th>Tags</th>
-            <th>Grade</th>
+            <th onClick={() => handleSort("year")}>
+              Year {renderSortArrow("year")}
+            </th>
+            <th onClick={() => handleSort("player")}>
+              Player {renderSortArrow("player")}
+            </th>
+            <th onClick={() => handleSort("addedDate")}>
+              Added Date {renderSortArrow("addedDate")}
+            </th>
+            <th onClick={() => handleSort("manufacturer")}>
+              Manufacturer {renderSortArrow("manufacturer")}
+            </th>
+            <th onClick={() => handleSort("cardSet")}>
+              Set {renderSortArrow("cardSet")}
+            </th>
+            <th onClick={() => handleSort("subset")}>
+              Subset {renderSortArrow("subset")}
+            </th>
+            <th onClick={() => handleSort("type")}>
+              Type {renderSortArrow("type")}
+            </th>
+            <th onClick={() => handleSort("onCardCode")}>
+              On Card Code {renderSortArrow("onCardCode")}
+            </th>
+            <th onClick={() => handleSort("sport")}>
+              Sport {renderSortArrow("sport")}
+            </th>
+            <th onClick={() => handleSort("tags")}>
+              Tags {renderSortArrow("tags")}
+            </th>
+            <th onClick={() => handleSort("grade")}>
+              Grade {renderSortArrow("grade")}
+            </th>
             <th>Notes</th>
-            <th>Price Paid</th>
-            <th>Market Price</th>
+            <th onClick={() => handleSort("pricePaid")}>
+              Price Paid {renderSortArrow("pricePaid")}
+            </th>
+            <th onClick={() => handleSort("marketPrice")}>
+              Market Price {renderSortArrow("marketPrice")}
+            </th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -448,18 +556,64 @@ const CardList: React.FC<CardListProps> = ({
         </button>
       </div>
       <div className="pagination">
-        <button onClick={() => onPageChange(page - 1)} disabled={page === 1}>
-          Previous
-        </button>
-        <span>
-          Page {page} of {totalPages}
-        </span>
         <button
-          onClick={() => onPageChange(page + 1)}
+          onClick={() =>
+            onPageChange(1, limit, sortField, sortOrder || undefined)
+          }
+          disabled={page === 1}
+          className="underline"
+        >
+          &laquo;
+        </button>
+        <button
+          onClick={() =>
+            onPageChange(page - 1, limit, sortField, sortOrder || undefined)
+          }
+          disabled={page === 1}
+        >
+          &lt;
+        </button>
+        {getPageNumbers().map((pageNumber) => (
+          <button
+            key={pageNumber}
+            onClick={() =>
+              onPageChange(pageNumber, limit, sortField, sortOrder || undefined)
+            }
+            className={pageNumber === page ? "active" : ""}
+          >
+            {pageNumber}
+          </button>
+        ))}
+        <button
+          onClick={() =>
+            onPageChange(page + 1, limit, sortField, sortOrder || undefined)
+          }
           disabled={page * limit >= total}
         >
-          Next
+          &gt;
         </button>
+        <button
+          onClick={() =>
+            onPageChange(totalPages, limit, sortField, sortOrder || undefined)
+          }
+          disabled={page === totalPages}
+          className="underline"
+        >
+          &raquo;
+        </button>
+        <div className="page-info">
+          Page {page} of {totalPages}
+        </div>
+        <div className="page-jump">
+          <input
+            type="number"
+            value={pageInput}
+            onChange={handlePageInputChange}
+            min="1"
+            max={totalPages}
+          />
+          <button onClick={handlePageJump}>Go</button>
+        </div>
       </div>
       {expandedNote && (
         <div className="overlay" onClick={handleCloseOverlay}>

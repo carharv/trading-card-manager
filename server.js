@@ -14,13 +14,20 @@ db.sequelize.sync().then(() => {
 });
 
 app.get("/cards", async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
+  const { page = 1, limit = 10, sortField = "id", sortOrder } = req.query;
   const offset = (page - 1) * limit;
+
   try {
-    const cards = await db.Card.findAndCountAll({
+    const findOptions = {
       limit: parseInt(limit, 10),
       offset: parseInt(offset, 10),
-    });
+    };
+
+    if (sortOrder && sortField) {
+      findOptions.order = [[sortField, sortOrder.toUpperCase()]];
+    }
+
+    const cards = await db.Card.findAndCountAll(findOptions);
     res.json({
       data: cards.rows,
       total: cards.count,
@@ -29,7 +36,7 @@ app.get("/cards", async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching cards:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message, stack: error.stack });
   }
 });
 
@@ -84,6 +91,8 @@ app.get("/search", async (req, res) => {
     quantity,
     page = 1,
     limit = 10,
+    sortField = "id",
+    sortOrder,
   } = req.query;
 
   const offset = (page - 1) * limit;
@@ -117,11 +126,17 @@ app.get("/search", async (req, res) => {
     if (marketPrice) query.marketPrice = { [Op.eq]: marketPrice };
     if (quantity) query.quantity = { [Op.eq]: quantity };
 
-    const cards = await db.Card.findAndCountAll({
+    const findOptions = {
       where: query,
       limit: parseInt(limit, 10),
       offset: parseInt(offset, 10),
-    });
+    };
+
+    if (sortOrder && sortField) {
+      findOptions.order = [[sortField, sortOrder.toUpperCase()]];
+    }
+
+    const cards = await db.Card.findAndCountAll(findOptions);
     res.json({
       data: cards.rows,
       total: cards.count,
@@ -130,7 +145,7 @@ app.get("/search", async (req, res) => {
     });
   } catch (error) {
     console.error("Error searching cards:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message, stack: error.stack });
   }
 });
 

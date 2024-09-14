@@ -125,6 +125,13 @@
   border-radius: 5px;
 }
 
+.recent-players {
+  margin-bottom: 20px;
+}
+
+.recent-players h4 {
+  margin-bottom: 10px;
+}
 /* Responsive Design */
 @media (max-width: 768px) {
   .add-card-container {

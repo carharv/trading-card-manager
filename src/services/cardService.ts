@@ -1,8 +1,8 @@
 // src/services/cardService.ts
 import axios from "axios";
 
-const API_URL = "http://localhost:5001";
-//const API_URL = "http://192.168.1.170:5001";
+//const API_URL = "http://localhost:5001";
+const API_URL = "http://192.168.1.89:5001";
 
 export interface Card {
   id: number;
@@ -79,4 +79,11 @@ export const searchCards = async (
   });
   console.log("Search Response:", response.data);
   return response.data;
+};
+
+// New function to fetch the recently added players
+export const getRecentPlayers = async () => {
+  const response = await axios.get(`${API_URL}/cards/recent-players`);
+  console.log("Recently Added Players Response:", response.data);
+  return response.data; // This should return an array of player names
 };

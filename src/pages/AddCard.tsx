@@ -1,6 +1,6 @@
 // src/pages/AddCard.tsx
-import React, { useState } from "react";
-import { addCard } from "../services/cardService";
+import React, { useState, useEffect } from "react";
+import { addCard, getRecentPlayers } from "../services/cardService";
 import Papa from "papaparse";
 import "../styles/AddCard.css";
 
@@ -59,24 +59,38 @@ const AddCard: React.FC = () => {
     duplicates: "1", // Default duplicates to 1
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [recentPlayers, setRecentPlayers] = useState<string[]>([]); // State for recently added players
   const [csvFile, setCsvFile] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [importProgress, setImportProgress] = useState<number>(0);
   const [importErrors, setImportErrors] = useState<CsvError[]>([]);
   const [successMessage, setSuccessMessage] = useState<string>("");
 
+  // Fetch recent players when the component mounts
+  useEffect(() => {
+    const fetchRecentPlayers = async () => {
+      try {
+        const players = await getRecentPlayers(); // Fetch the recent players from the API
+        setRecentPlayers(players);
+      } catch (error) {
+        console.error("Failed to fetch recent players:", error);
+      }
+    };
+    fetchRecentPlayers();
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handlePlayerButtonClick = (playerName: string) => {
+    setForm({ ...form, player: playerName }); // Autofill the player input when a button is clicked
   };
 
   const validateForm = (data: FormState) => {
     const newErrors: { [key: string]: string } = {};
 
-    if (
-      !data.year ||
-      isNaN(Number(data.year.toString())) ||
-      Number(data.year) <= 0
-    ) {
+    if (!data.year || isNaN(Number(data.year)) || Number(data.year) <= 0) {
       newErrors.year = "Year is required and must be a positive number";
     }
     if (!data.player) {
@@ -99,21 +113,19 @@ const AddCard: React.FC = () => {
     }
     if (
       data.pricePaid &&
-      (isNaN(Number(data.pricePaid.toString())) || Number(data.pricePaid) < 0)
+      (isNaN(Number(data.pricePaid)) || Number(data.pricePaid) < 0)
     ) {
       newErrors.pricePaid = "Price Paid must be a valid number";
     }
     if (
       data.marketPrice &&
-      (isNaN(Number(data.marketPrice.toString())) ||
-        Number(data.marketPrice) < 0)
+      (isNaN(Number(data.marketPrice)) || Number(data.marketPrice) < 0)
     ) {
       newErrors.marketPrice = "Market Price must be a valid number";
     }
     if (
       data.duplicates &&
-      (isNaN(Number(data.duplicates.toString())) ||
-        Number(data.duplicates) <= 0)
+      (isNaN(Number(data.duplicates)) || Number(data.duplicates) <= 0)
     ) {
       newErrors.duplicates = "Duplicates must be a positive number";
     }
@@ -251,6 +263,26 @@ const AddCard: React.FC = () => {
           {errors.year && <span className="error">{errors.year}</span>}
         </div>
         <div className="form-group">
+          {/* Recently added players section */}
+          <div className="recent-players">
+            <h4>Recently Added Players:</h4>
+            <div className="recent-players-buttons">
+              {recentPlayers.length > 0 ? (
+                recentPlayers.map((player, index) => (
+                  <button
+                    type="button"
+                    key={index}
+                    onClick={() => handlePlayerButtonClick(player)} // Autofill player name on click
+                    className="player-button"
+                  >
+                    {player}
+                  </button>
+                ))
+              ) : (
+                <p>No recent players found</p>
+              )}
+            </div>
+          </div>
           <label>Player</label>
           <input
             type="text"

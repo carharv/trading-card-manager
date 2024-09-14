@@ -13,6 +13,7 @@ db.sequelize.sync().then(() => {
   console.log("Database synchronized");
 });
 
+// Get all cards with pagination and sorting
 app.get("/cards", async (req, res) => {
   const { page = 1, limit = 10, sortField = "id", sortOrder } = req.query;
   const offset = (page - 1) * limit;
@@ -40,6 +41,7 @@ app.get("/cards", async (req, res) => {
   }
 });
 
+// Add a new card
 app.post("/cards", async (req, res) => {
   try {
     const newCard = await db.Card.create(req.body);
@@ -50,6 +52,7 @@ app.post("/cards", async (req, res) => {
   }
 });
 
+// Update an existing card
 app.put("/cards/:id", async (req, res) => {
   try {
     const updatedCard = await db.Card.update(req.body, {
@@ -63,6 +66,7 @@ app.put("/cards/:id", async (req, res) => {
   }
 });
 
+// Delete a card
 app.delete("/cards/:id", async (req, res) => {
   try {
     await db.Card.destroy({ where: { id: req.params.id } });
@@ -73,6 +77,7 @@ app.delete("/cards/:id", async (req, res) => {
   }
 });
 
+// Search for cards
 app.get("/search", async (req, res) => {
   const {
     year,
@@ -146,6 +151,33 @@ app.get("/search", async (req, res) => {
   } catch (error) {
     console.error("Error searching cards:", error);
     res.status(500).json({ error: error.message, stack: error.stack });
+  }
+});
+
+app.get("/cards/recent-players", async (req, res) => {
+  try {
+    // Fetch both player and created_at to use in the ordering
+    const recentPlayers = await db.Card.findAll({
+      attributes: ["player", "addedDate"], // Fetch both player and created_at
+      order: [["addedDate", "DESC"]], // Order by created_at (or addedDate if that's your field)
+    });
+
+    // Filter out the distinct players, keeping only the first 3
+    const distinctPlayers = [];
+    const seenPlayers = new Set();
+
+    for (const card of recentPlayers) {
+      if (!seenPlayers.has(card.player)) {
+        seenPlayers.add(card.player);
+        distinctPlayers.push(card.player);
+      }
+      if (distinctPlayers.length === 5) break; // Only keep the first 3 distinct players
+    }
+
+    res.json(distinctPlayers); // Send the distinct players back
+  } catch (error) {
+    console.error("Error fetching recent players:", error);
+    res.status(500).json({ error: error.message });
   }
 });
 

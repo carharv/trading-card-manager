@@ -286,6 +286,25 @@ const CardList: React.FC<CardListProps> = ({
     return pageNumbers;
   };
 
+  const handleEditClick = (card: Card) => {
+    setEditingCard(card);
+    setForm({
+      year: card.year,
+      player: card.player,
+      manufacturer: card.manufacturer,
+      cardSet: card.cardSet,
+      subset: card.subset || "",
+      type: card.type,
+      onCardCode: card.onCardCode,
+      sport: card.sport,
+      tags: card.tags || [],
+      grade: card.grade || "",
+      notes: card.notes || "",
+      pricePaid: card.pricePaid || null,
+      marketPrice: card.marketPrice || null,
+    });
+  };
+
   return (
     <div className="card-list-container">
       <h1>Card List</h1>
@@ -534,7 +553,9 @@ const CardList: React.FC<CardListProps> = ({
                     <td>{card.pricePaid?.toFixed(2)}</td>
                     <td>{card.marketPrice?.toFixed(2)}</td>
                     <td>
-                      <button onClick={() => setEditingCard(card)}>Edit</button>
+                      <button onClick={() => handleEditClick(card)}>
+                        Edit
+                      </button>
                       <button onClick={() => handleDelete(card.id)}>
                         Delete
                       </button>
